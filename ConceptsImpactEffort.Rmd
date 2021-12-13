@@ -1,0 +1,52 @@
+---
+title: "Home buying and selling"
+author: "David Thompson"
+date: "13/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Analysis
+
+Given a list of concepts, with an effort and impact score, demonstrate the difference
+
+## Step 1: Import
+
+Import concepts
+
+```{r load data}
+concepts <- read.csv("data/concepts.csv")
+```
+
+## Step 2: Verify data
+
+```{r look at data}
+head(concepts)
+```
+
+```{r look at column names}
+colnames(concepts)
+```
+
+## Step 3: Install and load the 'ggplot2' package
+
+```{r loading and installing ggplot2, echo=FALSE, message=FALSE}
+install.packages('ggplot2')
+library(ggplot2)
+```
+
+## Step 4: Making a Scatter Plot
+
+```{r}
+ggplot(concepts, aes(x = Effort, y = Impact, label = Concept, color = Concept)) + 
+  geom_point() +
+  geom_text(hjust=-0.05, vjust=0, size=3) + 
+  expand_limits(x = c(0, 70), y = c(0, 70)) + 
+  xlab("Effort (0 - Difficult, 70 - Easier)") +
+  ylab("Impact (0 - Low, 70 - High)") +
+  labs(title = "Scatterplot of HBAS Concepts: Effort and Impact", subtitle = "Concepts toward the top right are lower effort, higher impact")
+
+```
