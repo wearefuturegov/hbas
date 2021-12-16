@@ -27,15 +27,20 @@ concepts <- read.csv("data/concepts.csv")
 head(concepts)
 ```
 
-```{r look at column names}
-colnames(concepts)
+```{r prep data}
+# In the data source a higher effort score means low effort - we want to invert these so that we can see
+# high effort and high impact in the top right, and low effort and low impact in the bottom left
+concepts$Effort = 70 - concepts$Effort
+head(concepts)
 ```
 
 ## Step 3: Install and load the 'ggplot2' package
 
 ```{r loading and installing ggplot2, echo=FALSE, message=FALSE}
 install.packages('ggplot2')
+install.packages("ggrepel")
 library(ggplot2)
+library(ggrepel)
 ```
 
 ## Step 4: Making a Scatter Plot
@@ -43,10 +48,11 @@ library(ggplot2)
 ```{r}
 ggplot(concepts, aes(x = Effort, y = Impact, label = Concept, color = Concept)) + 
   geom_point() +
-  geom_text(hjust=-0.05, vjust=0, size=3) + 
-  expand_limits(x = c(0, 70), y = c(0, 70)) + 
-  xlab("Effort (0 - Difficult, 70 - Easier)") +
+  lims(x = c(10, 60), y = c(10, 60)) + 
+  geom_vline(xintercept = 35) + geom_hline(yintercept = 35) + 
+  geom_label_repel() +
+  xlab("Effort (0 - Easier, 70 - Difficult)") +
   ylab("Impact (0 - Low, 70 - High)") +
-  labs(title = "Scatterplot of HBAS Concepts: Effort and Impact", subtitle = "Concepts toward the top right are lower effort, higher impact")
-
+  labs(title = "Scatterplot of HBAS Concepts: Effort and Impact", subtitle = "Concepts toward the top right are more effort, higher impact")
+ggsave("concepts.png")
 ```
